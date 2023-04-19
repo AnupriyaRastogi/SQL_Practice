@@ -1,0 +1,5 @@
+SELECT ua.id, ua.first_name, ua.last_name, c.id, c.customer_name, count(c.id)
+from customer c, user_account ua, contact ct
+where c.id= ct.customer_id and ct.user_account_id=ua.id
+group by ua.id, ua.first_name, ua.last_name, c.id, c.customer_name
+having count(c.id) >1;
