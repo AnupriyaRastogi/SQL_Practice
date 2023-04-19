@@ -1,0 +1,5 @@
+SELECT P.sku,
+        P.product_name
+From Product P
+Left join Invoice_Item it on P.id = it.Product_id
+Where it.invoice_id is NULL; P
