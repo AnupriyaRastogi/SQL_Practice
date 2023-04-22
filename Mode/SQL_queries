@@ -1,7 +1,53 @@
 Public Warehouse I used
-
 ---------
 jseidman.ride_timestamps
 jseidman.driver_ids
 jseidman.ride_ids
 ---------
+
+
+-- Practice
+
+
+Select * 
+From 
+(Select 
+   ride_id, 
+   count(1) count_ride
+From jseidman.ride_timestamps
+group by ride_id
+) as a 
+where count_ride >1;
+
+Select 
+   ride_id, 
+   count(ride_id) count_ride
+From jseidman.ride_timestamps
+group by ride_id
+
+
+
+Select 
+   ride_id, 
+   event,
+   count(ride_id) count_ride
+From jseidman.ride_timestamps
+group by ride_id, event
+;
+
+select 
+   driver_id, 
+   ride_id, 
+   sum(ride_duration)
+from 
+   jseidman.ride_ids
+   group by 1,2
+   
+
+select 
+    driver_id, 
+    ride_id, 
+   sum( ride_distance) as ride_distance
+from jseidman.ride_ids
+group by 1, 2
+order by driver_id
