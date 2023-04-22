@@ -1,0 +1,60 @@
+Public Warehouse
+---------------------------
+jseidman.ride_timestamps  ||
+jseidman.driver_ids       || 
+jseidman.ride_ids         ||
+---------------------------
+
+
+
+-- Returns first 100 rows from jseidman.ride_ids
+  SELECT * FROM jseidman.ride_ids LIMIT 100;
+
+SELECT
+   count(*), 
+   count(driver_onboard_date)
+from jseidman.driver_ids;
+
+
+Select a.driver_id,
+      b.driver_onboard_date,
+      Sum(a.ride_distance) total
+from jseidman.ride_ids a
+join jseidman.driver_ids b on a.driver_id = b.driver_id
+Group by a.driver_id, b.driver_onboard_date
+having total >100;
+
+Select * 
+from 
+(Select a.driver_id,
+      b.driver_onboard_date,
+      Sum(a.ride_distance) total
+from jseidman.ride_ids a
+join jseidman.driver_ids b on a.driver_id = b.driver_id
+Group by a.driver_id, b.driver_onboard_date) as c
+where total >100;
+
+select 
+a.*, 
+b.driver_onboard_date
+from 
+(Select driver_id,
+      sum(ride_distance) total
+from jseidman.ride_ids 
+group by driver_id) as a
+left join jseidman.driver_ids b on a.driver_id = b.driver_id
+
+
+select 
+   a.*, 
+   b.driver_onboard_date,
+   b.driver_id
+from 
+(Select driver_id as driverid2,
+      sum(ride_distance) total
+from jseidman.ride_ids 
+group by driver_id) as a 
+left join jseidman.driver_ids as b on a.driverid2 = b.driver_id
+where total > 100 and length(b.driver_id) >1  
+
+-- WHERE can use alias name if we make a new table
