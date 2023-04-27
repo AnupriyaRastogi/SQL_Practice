@@ -1,0 +1,20 @@
+Your manager would like to see the 'orderld', 'customerld' and 'productid" for the last 15 returned orders, based on the 'orderDate' column. 
+If two returned orders were ordered on the same day, sort by value, showing the highest value order first.
+
+How would you return this summary table using SQL?
+
+Note - an order can span multiple rows in the 'orders' table, but each row in an order will have the same orderld.
+================================================================================================================================================
+
+Select O.orderid,
+		C.customerID,
+    P.productId
+From returns R
+inner join Orders O
+	on O.orderId = R.orderId
+inner Join Customers C
+   	on C.customerID= O.customerID
+inner Join products P
+   	on P.productId = O.productId
+Order by O.orderDate DESC, O.Value DESC
+Limit 15;
