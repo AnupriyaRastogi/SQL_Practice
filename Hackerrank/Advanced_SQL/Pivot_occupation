@@ -1,0 +1,18 @@
+Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. 
+The output column headers should be Doctor, Professor, Singer, and Actor, respectively.
+
+Note: Print NULL when there are no more names corresponding to an occupation.
+
+
+CREATE VIEW pq AS (
+    SELECT 
+        CASE WHEN occupation = 'Doctor' THEN name END AS 'Doctor',
+        CASE WHEN occupation = 'Professor' THEN name END AS 'Professor',
+        CASE WHEN occupation = 'Singer' THEN name END AS  'Singer',
+        CASE WHEN occupation = 'Actor' THEN name END AS  'Actor',
+        ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) as cr
+    FROM occupations
+);
+
+SELECT MAX(Doctor),MAX(Professor),MAX(Singer),MAX(Actor) FROM pq 
+GROUP BY cr
