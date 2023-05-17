@@ -16,3 +16,36 @@ CREATE VIEW pq AS (
 
 SELECT MAX(Doctor),MAX(Professor),MAX(Singer),MAX(Actor) FROM pq 
 GROUP BY cr
+
+
+with doc as (SELECT Name, Row_number() over(order by name) as num FROM Occupations WHERE Occupation = 'Doctor'), 
+prof as (SELECT Name, Row_number() over(order by name) as num FROM Occupations WHERE Occupation = 'Professor'), 
+sing as (SELECT Name, Row_number() over(order by name) as num FROM Occupations WHERE Occupation = 'Singer'), 
+act as (SELECT Name, Row_number() over(order by name) as num FROM Occupations WHERE Occupation = 'Actor')
+SELECT 
+doc.Name, 
+prof.Name, 
+sing.Name, 
+act.Name 
+FROM doc
+full join  prof on doc.num = prof.num 
+full join  sing on doc.num = sing.num or prof.num = sing.num 
+full join  act on doc.num = act.num or prof.num = act.num or sing.num = act.num
+;
+
+with occ as 
+(SELECT 
+Name,
+Occupation,
+Row_number() over(partition by Occupation order by name) as num 
+FROM Occupations)
+SELECT 
+doc.Name, 
+prof.Name, 
+sing.Name, 
+act.Name 
+FROM (select Name, num from occ where Occupation = 'Doctor') doc
+full join  (select Name, num from occ where Occupation = 'Professor')  prof on doc.num = prof.num 
+full join  (select Name, num from occ where Occupation = 'Singer') sing on doc.num = sing.num or prof.num = sing.num 
+full join  (select Name, num from occ where Occupation = 'Actor') act on doc.num = act.num or prof.num = act.num or sing.num = act.num
+;
