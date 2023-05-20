@@ -1,0 +1,10 @@
+Show the percent of patients that have 'M' as their gender. 
+Round the answer to the nearest hundreth number and in percent form.
+-----------------------------------------------------------------------------------------------------------
+
+
+select CONCAT(ROUND(CAST(SUM(Case when gender = 'M' Then 1 else 0 END) * 100.0 as float) /Count(*), 2), '%')
+from patients;
+
+SELECT CONCAT(ROUND(SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2), '%')
+FROM patients;
