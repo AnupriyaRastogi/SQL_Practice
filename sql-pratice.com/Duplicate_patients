@@ -1,0 +1,11 @@
+Display the number of duplicate patients based on their first_name and last_name.
+
+SELECT
+  first_name,
+  last_name,
+  count(*) as num_duplicate
+from patients
+group by
+  first_name,
+  last_name
+having num_duplicate > 1
