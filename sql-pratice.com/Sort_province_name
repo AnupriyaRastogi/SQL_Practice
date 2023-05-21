@@ -1,0 +1,11 @@
+Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.
+
+with ontario as 
+(
+SELECT *
+FROM province_names 
+ORDER BY (province_name = 'Ontario') DESC
+)
+select province_name
+from ontario
+order by province_name ASC
