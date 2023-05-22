@@ -9,7 +9,7 @@ Order by employee last_name, then by first_name, and then descending by number o
 select  em.first_name,
 		em.last_name,
         count(distinct o.order_id) num_order, 
-        Case when  shipped_date >= required_date then 'Late' 
+        Case when  shipped_date > required_date then 'Late' 
      when shipped_date is null then 'Late'
      Else 'On Time' END as 'shipped'
 from employees em 
