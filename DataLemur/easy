@@ -25,3 +25,53 @@ from pages p
 left join page_likes pl on pl.page_id = p.page_id
 where liked_date IS NULL
 order by p.page_id;
+
+=======================================================================================================================================
+
+Tesla is investigating production bottlenecks and they need your help to extract the relevant data. 
+Write a query that determines which parts with the assembly steps have initiated the assembly process but remain unfinished.
+
+Assumptions:
+
+parts_assembly table contains all parts currently in production, each at varying stages of the assembly process.
+An unfinished part is one that lacks a finish_date.
+This question is straightforward, so let's approach it with simplicity in both thinking and solution.
+
+Select part,
+        assembly_step
+from parts_assembly
+where finish_date is null
+
+========================================================================================================================================
+
+Assume you're given the table on user viewership categorised by device type where the three types are laptop, tablet, and phone.
+
+Write a query that calculates the total viewership for laptops and mobile devices where mobile is defined as the sum of tablet and phone viewership. 
+Output the total viewership for laptops as laptop_reviews and the total viewership for mobile devices as mobile_views.
+
+SELECT
+      sum(case when device_type = 'laptop' then 1 else 0 end ) laptop_view,
+      sum(case when device_type IN ('tablet', 'phone') then 1 else 0 end) mobile_view
+from viewership 
+
+========================================================================================================================================
+
+Assume you're given the tables containing completed trade orders and user details in a Robinhood trading system.
+
+Write a query to retrieve the top three cities that have the highest number of completed trade orders listed in descending order. 
+Output the city name and the corresponding number of completed trade orders.
+
+with completed_order as
+(SELECT *
+from trades 
+where status= 'Completed'),
+count_order as 
+  (SELECT u.city,
+          COUNT (*) AS total_count
+  FROM users u
+  join completed_order as co on u.user_id=co.user_id
+  group by u.city)
+select *
+from count_order
+order by total_count DESC
+LIMIT 3
