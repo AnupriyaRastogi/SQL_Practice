@@ -75,3 +75,42 @@ select *
 from count_order
 order by total_count DESC
 LIMIT 3
+
+===========================================================================================================================================
+
+Assume you are given the table below that shows job postings for all companies on the LinkedIn platform. 
+Write a query to get the number of companies that have posted duplicate job listings.
+
+Clarification:
+
+Duplicate job listings refer to two jobs at the same company with the same title and description.
+
+
+with new AS
+(
+select title,
+description, 
+company_id,
+COUNT(job_id) as job_count
+from job_listings
+GROUP BY title,
+description, 
+company_id)
+
+SELECT COUNT(DISTINCT company_id) AS co_w_duplicate_jobs
+from new
+where job_count >1;
+
+==============================================================================================================================================
+
+Given a table of Facebook posts, for each user who posted at least twice in 2021, 
+write a query to find the number of days between each user’s first post of the year and last post of the year in the year 2021. 
+Output the user and number of the days between each user's first and last post.
+
+SELECT user_id,
+        EXTRACT(Days from (MAx(post_date)- MIn(post_date))) as Between_days
+from posts
+where EXTRACT(year from post_date) = '2021'
+group by 1
+having count (post_id) > 1
+order by 1
