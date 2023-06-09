@@ -114,3 +114,24 @@ where EXTRACT(year from post_date) = '2021'
 group by 1
 having count (post_id) > 1
 order by 1
+
+===============================================================================================================================================
+
+CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. 
+Each drug can only be produced by one manufacturer.
+
+Write a query to find the top 3 most profitable drugs sold, and how much profit they made. 
+Assume that there are no ties in the profits. Display the result from the highest to the lowest total profit.
+
+Definition:
+
+cogs stands for Cost of Goods Sold which is the direct cost associated with producing the drug.
+Total Profit = Total Sales - Cost of Goods Sold
+
+
+select drug,
+(total_sales - cogs) total_profit
+from pharmacy_sales
+GROUP BY drug, total_sales, cogs
+order by total_profit DESC
+LIMIT 3
