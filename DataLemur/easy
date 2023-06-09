@@ -108,7 +108,7 @@ write a query to find the number of days between each user’s first post of the
 Output the user and number of the days between each user's first and last post.
 
 SELECT user_id,
-        EXTRACT(Days from (MAx(post_date)- MIn(post_date))) as Between_days
+        EXTRACT(Days from (Max(post_date)- Min(post_date))) as Between_days
 from posts
 where EXTRACT(year from post_date) = '2021'
 group by 1
@@ -135,3 +135,52 @@ from pharmacy_sales
 GROUP BY drug, total_sales, cogs
 order by total_profit DESC
 LIMIT 3
+
+==============================================================================================================================================================
+
+CVS Health is analyzing its pharmacy sales data, and how well different products are selling in the market. 
+Each drug is exclusively manufactured by a single manufacturer.
+
+Write a query to identify the manufacturers associated with the drugs that resulted in losses for CVS Health and calculate the total amount of losses incurred.
+
+Output the manufacturer's name, the number of drugs associated with losses, and the total losses in absolute value. 
+Display the results sorted in descending order with the highest losses displayed at the top.
+
+SELECT 
+    manufacturer, 
+    COUNT(drug) drug_count,
+    SUM(cogs-total_sales) total_loss
+from pharmacy_sales
+where total_sales < cogs
+group by manufacturer
+order by total_loss desc
+
+OR 
+
+SELECT 
+    manufacturer, 
+    COUNT(drug) drug_count,
+   ABS(SUM(total_sales-cogs)) total_loss
+from pharmacy_sales
+where (total_sales-cogs) <=0
+group by manufacturer
+order by total_loss desc
+====================================================================================================================================================
+
+CVS Health is trying to better understand its pharmacy sales, and how well different products are selling.
+
+Write a query to find the total drug sales for each manufacturer. Round your answer to the closest million,
+and report your results in descending order of total sales.
+
+Because this data is being directly fed into a dashboard which is being seen by business stakeholders, format your result like this: "$36 million".
+
+SELECT  
+        manufacturer,
+        CONCAT('$',ROUND(CAST(SUM(total_sales) as float)/1000000),' million') sales_mil
+FROM pharmacy_sales
+Group by manufacturer
+order by SUM(total_sales) DESC;
+
+=======================================================================================================================================================
+
+
