@@ -1,6 +1,11 @@
 # SQL_HackerRank
 
 Saving my Queries here for the reference
+
+Trying to solve questions from 
+# LINKEDIN, META, UNITEDHEALTH, MCKINSEY, ALIBABA, CVS, JP MORGAN, TIKTOK, GOOGLE, AMAZON, INTRUIT, PAYPAL, ROBINHOOD etc
+
+
 ## Basic Certification
 ![sql_basic certificate](https://user-images.githubusercontent.com/100975423/233550578-08847cd9-d820-46c2-966a-e0c0fc2408c6.jpg)
 ## Intermediate Certification
