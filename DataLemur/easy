@@ -271,6 +271,32 @@ ORDER BY difference desc
 
 ===========================================================================================================================================================
 
+UnitedHealth has a program called Advocate4Me, which allows members to call an advocate and receive support for their health care needs – whether
+that's behavioural, clinical, well-being, health care financing, benefits, claims or pharmacy help.
+
+Write a query to find how many UHG members made 3 or more calls. case_id column uniquely identifies each call made.
+
+with cte1 AS
+(
+SELECT policy_holder_id,
+        COUNT(case_id) case_count
+from callers
+GROUP BY policy_holder_id
+having COUNT(case_id) >= 3 
+)
+SELECT COUNT(policy_holder_id) member_count
+from cte1
+
+OR 
+
+SELECT COUNT(policy_holder_id) member_count
+from (SELECT policy_holder_id,
+        COUNT(case_id) case_count
+from callers
+GROUP BY policy_holder_id
+having COUNT(case_id) >= 3 
+) as cte1
+
 
 
 
