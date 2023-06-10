@@ -1,0 +1,13 @@
+Assume you are given the table below on Uber transactions made by users. 
+Write a query to obtain the third transaction of every user.
+Output the user id, spend and transaction date.
+
+SELECT user_id,
+        spend,
+        transaction_date
+from (SELECT *,
+      row_number() over (PARTITION by user_id order by transaction_date asc) as row_number 
+from transactions) as table1
+where row_number = 3;
+
+=================================================================================================================================
