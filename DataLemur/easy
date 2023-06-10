@@ -221,6 +221,56 @@ from callers
 SELECT Round((100.0 * uncatergorise_call) / total_calls, 1) as percentage_of_calls
 from total , uncategorise
 
+======================================================================================================================================================
+
+
+You're trying to find the mean number of items per order on Alibaba, 
+rounded to 1 decimal place using tables which includes information on the count of items in each order (item_count table) 
+and the corresponding number of orders for each item count (order_occurrences table).
+
+with cte1 AS
+(
+SELECT SUM(order_occurrences) as Total_orders
+from items_per_order
+),
+cte2 as 
+(
+select SUM(item_count*order_occurrences) as Total_items
+from items_per_order)
+
+SELECT ROUND( (Total_items * 1.0) /Total_orders, 1)  mean
+from cte1,cte2
+
+=======================================================================================================================================================
+
+Given the reviews table, write a query to retrieve the average star rating for each product, grouped by month. 
+The output should display the month as a numerical value, product ID, and average star rating rounded to two decimal places. 
+Sort the output first by month and then by product ID.
+
+SELECT EXTRACT(month from submit_date) as mnth,
+        product_id,
+        ROUND((cast (Sum(stars) as decimal) / COUNT(stars)), 2) as avg_stars
+FROM reviews
+group by product_id, EXTRACT(month from submit_date)
+order by mnth ASC, product_id ASc
+
+
+===========================================================================================================================================================
+
+Your team at JPMorgan Chase is soon launching a new credit card, and to gain some context, you are analyzing how many credit cards were issued each month.
+
+Write a query that outputs the name of each credit card and the difference in issued amount between the month with the most cards issued, and the least cards issued. 
+Order the results according to the biggest difference.
+
+SELECT card_name,
+        (MAX(issued_amount) - MIN(issued_amount)) difference
+FROM monthly_cards_issued 
+group by card_name
+ORDER BY difference desc
+;
+
+===========================================================================================================================================================
+
 
 
 
