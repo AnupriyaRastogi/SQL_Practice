@@ -29,3 +29,25 @@ SELECT
         ORDER BY tweet_date
         ROWS Between 2 PRECEDING and current row), 2) rolling_avg_3d
 FROM tweets
+
+=============================================================================================================================================
+
+Assume you're given a table with measurement values obtained from a Google sensor over multiple days with measurements taken multiple times within each day.
+
+Write a query to calculate the sum of odd-numbered and even-numbered measurements separately for a particular day and display the results in two different columns. 
+Refer to the Example Output below for the desired format.
+
+Definition:
+
+Within a day, measurements taken at 1st, 3rd, and 5th times are considered odd-numbered measurements, 
+and measurements taken at 2nd, 4th, and 6th times are considered even-numbered measurements.
+
+SELECT measurement_day,
+            SUM(CASE WHEN row_num %2 != 0 then measurement_value else 0 end ) odd_num,           
+            SUM(CASE WHEN row_num %2 = 0 then measurement_value else 0 end ) even_num
+FROM (
+        SELECT measurement_value,CAST(measurement_time AS DATE) measurement_day,
+        Row_number() over (PARTITION BY CAST(measurement_time AS DATE) order by measurement_time) row_num
+from measurements
+                  ) as new
+group by measurement_day
