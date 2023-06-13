@@ -73,3 +73,41 @@ SELECT card_name,
 from cte1
 where rank1= 1
 order by issued_amount desc
+
+====================================================================================================================================================
+
+Assume there are three Spotify tables: artists, songs, and global_song_rank, which contain information about the artists, songs, and music charts, respectively.
+
+Write a query to find the top 5 artists whose songs appear most frequently in the Top 10 of the global_song_rank table. 
+Display the top 5 artist names in ascending order, along with their song appearance ranking.
+
+Assumptions:
+
+If two or more artists have the same number of song appearances, they should be assigned the same ranking, 
+and the rank numbers should be continuous (i.e. 1, 2, 2, 3, 4, 5).
+For instance, if both Ed Sheeran and Bad Bunny appear in the Top 10 five times, they should both be ranked 1st and the next artist should be ranked 2nd.
+
+with top_10_songs AS
+(
+SELECT song_id, rank
+from global_song_rank
+where rank <= 10
+),
+counted_songs as
+(
+SELECT COUNT(top_10_songs.song_id) as counted_song_id, songs.artist_id
+from songs
+join top_10_songs on top_10_songs.song_id = songs.song_id
+GROUP BY artist_id
+),
+ranked AS
+(
+SELECT artists.artist_name artist_name, 
+        Dense_rank() OVER (order by counted_song_id Desc) artist_rank
+from artists
+join counted_songs on counted_songs.artist_id= artists.artist_id
+) 
+SELECT artist_name, artist_rank
+from ranked
+where artist_rank <= 5 
+order by artist_rank ASC, artist_name ASC;
