@@ -161,3 +161,40 @@ SELECT age_bucket,
         (ROUND((100*CAST (open_time as decimal)/total_time), 2)) open_perc
 from cte1
 order by age_bucket
+
+
+====================================================================================================================================================
+
+New TikTok users sign up with their emails. They confirmed their signup by replying to the text confirmation to activate their accounts. 
+Users may receive multiple text messages for account confirmation until they have confirmed their new account.
+
+A senior analyst is interested to know the activation rate of specified users in the emails table. Write a query to find the activation rate.
+Round the percentage to 2 decimal places.
+
+Definitions:
+
+emails table contain the information of user signup details.
+texts table contains the users' activation information.
+Assumptions:
+
+The analyst is interested in the activation rate of specific users in the emails table, 
+which may not include all users that could potentially be found in the texts table.
+For example, user 123 in the emails table may not be in the texts table and vice versa.
+
+with cte1 AS
+(
+SELECT texts.email_id, Count(*) as total_users_having_email_id
+from   emails
+left join texts on texts.email_id = emails.email_id
+GROUP BY texts.email_id
+),
+new as 
+(
+SELECT emails.email_id, SUM(Case WHEN signup_action = 'Confirmed' then 1 else 0 end) confirmed_user
+from  emails
+left join texts on emails.email_id = texts.email_id
+GROUP BY emails.email_id
+)
+SELECT ROUND(SUM(confirmed_user)/SUM(total_users_having_email_id),2)
+from cte1 
+join new on new.email_id = cte1.email_id
