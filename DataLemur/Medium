@@ -111,3 +111,53 @@ SELECT artist_name, artist_rank
 from ranked
 where artist_rank <= 5 
 order by artist_rank ASC, artist_name ASC;
+
+====================================================================================================================================================
+
+Assume you're given tables with information on Snapchat users, including their ages and time spent sending and opening snaps.
+
+Write a query to obtain a breakdown of the time spent sending vs. opening snaps as a percentage of total time spent on these activities grouped by age group. 
+Round the percentage to 2 decimal places in the output.
+
+Notes:
+
+Calculate the following percentages:
+time spent sending / (Time spent sending + Time spent opening)
+Time spent opening / (Time spent sending + Time spent opening)
+To avoid integer division in percentages, multiply by 100.0 and not 100.
+
+with cte1 as
+(
+select age_bucket,
+       activities.user_id,
+        sum(case when activity_type = 'open' then time_spent else 0 end) open_time,
+      sum(case when activity_type = 'send' then time_spent else 0 end) send_time,
+      sum(case when activity_type IN ('open','send') then time_spent else 0 end) total_time
+from activities
+join age_breakdown on age_breakdown.user_id = activities.user_id
+group by activities.user_id, age_bucket
+)
+SELECT age_bucket,
+        (ROUND(((100.0* send_time)/total_time), 2)) send_perc,
+        (ROUND(((100.0* open_time)/total_time), 2)) open_perc
+from cte1
+order by age_bucket
+
+Alternative using "CAST"
+
+with cte1 as
+(
+select age_bucket,
+       activities.user_id,
+        sum(case when activity_type = 'open' then time_spent else 0 end) open_time,
+      sum(case when activity_type = 'send' then time_spent else 0 end) send_time,
+      sum(case when activity_type IN ('open','send') then time_spent else 0 end) total_time
+from activities
+join age_breakdown on age_breakdown.user_id = activities.user_id
+group by activities.user_id, age_bucket
+)
+SELECT age_bucket,
+        (ROUND(( 100*CAST (send_time as decimal)/total_time), 2)) send_perc,
+        (ROUND((100*CAST (open_time as decimal)/total_time), 2)) open_perc
+from cte1
+order by age_bucket
