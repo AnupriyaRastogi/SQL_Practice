@@ -198,3 +198,34 @@ GROUP BY emails.email_id
 SELECT ROUND(SUM(confirmed_user)/SUM(total_users_having_email_id),2)
 from cte1 
 join new on new.email_id = cte1.email_id
+
+============================================================================================================================================
+
+Assume you're given a table with information on Amazon customers and their spending on products in different categories, 
+write a query to identify the top two highest-grossing products within each category in the year 2022. 
+The output should include the category, product, and total spend.
+
+
+with cte1 AS
+(
+SELECT category, 
+        product,
+        sum(spend) as total_spend
+from product_spend
+where extract(year from transaction_date) = '2022'
+group by product, category 
+order by category ASC,  product DESC, total_spend DESC
+),
+cte2 AS
+(
+SELECT category, 
+        product,
+        total_spend,
+        RANK() over (partition by category order by total_spend DESC) as rank1
+from cte1
+)
+SELECT category, 
+        product,
+        total_spend
+from cte2
+where rank1 <= 2
