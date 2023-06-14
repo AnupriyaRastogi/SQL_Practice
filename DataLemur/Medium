@@ -213,8 +213,7 @@ SELECT category,
         sum(spend) as total_spend
 from product_spend
 where extract(year from transaction_date) = '2022'
-group by product, category 
-order by category ASC,  product DESC, total_spend DESC
+group by product, category
 ),
 cte2 AS
 (
