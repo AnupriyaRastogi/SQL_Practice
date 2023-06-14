@@ -228,3 +228,30 @@ SELECT category,
         total_spend
 from cte2
 where rank1 <= 2
+
+
+=========================================================================================================================================================================
+A Microsoft Azure Supercloud customer is a company which buys at least 1 product from each product category.
+
+Write a query to report the company ID which is a Supercloud customer.
+
+SELECT customer_id
+from (SELECT 
+        COUNT(DISTINCT p.product_category) as total_count,
+        customer_id
+from customer_contracts c 
+join products p on p.product_id = c.product_id
+group by customer_id) as a
+where total_count = 3
+
+
+SELECT customer_id
+from (
+SELECT 
+        COUNT(DISTINCT p.product_category) as total_count,
+        customer_id
+from customer_contracts c 
+join products p on p.product_id = c.product_id
+group by customer_id
+HAVING COUNT(DISTINCT p.product_category) = 3
+) as b
