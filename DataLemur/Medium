@@ -254,4 +254,38 @@ from customer_contracts c
 join products p on p.product_id = c.product_id
 group by customer_id
 HAVING COUNT(DISTINCT p.product_category) = 3
+
+========================================================================================================================================
+
+Assume you are given the table on Walmart user transactions. Based on a user's most recent transaction date, 
+write a query to obtain the users and the number of products bought.
+
+Output the user's most recent transaction date, user ID and the number of products sorted by the transaction date in chronological order.
+
+
+with xyz as (SELECT max(transaction_date) lst_date, user_id
+FROM user_transactions
+group by user_id)
+select 
+  a.transaction_date, 
+  a.user_id, 
+  count(a.product_id) purchase_count
+from 
+user_transactions as a  
+
+OR
+
+with cte1 as 
+(
+SELECT user_id, transaction_date,
+product_id,
+        RANK() over (partition by user_id order by transaction_date Desc) rank1
+from user_transactions
+)
+SELECT transaction_date, user_id, COUNT(product_id) purchase_count   
+from cte1
+where rank1 =1
+group by transaction_date, user_id
+join xyz as b on a.user_id = b.user_id and a.transaction_date = b.lst_date
+group by a.transaction_date, a.user_id
 ) as b
