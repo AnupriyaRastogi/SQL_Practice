@@ -272,6 +272,10 @@ select
   count(a.product_id) purchase_count
 from 
 user_transactions as a  
+join xyz as b on a.user_id = b.user_id and a.transaction_date = b.lst_date
+group by a.transaction_date, a.user_id
+) as b
+
 
 OR
 
@@ -286,6 +290,3 @@ SELECT transaction_date, user_id, COUNT(product_id) purchase_count
 from cte1
 where rank1 =1
 group by transaction_date, user_id
-join xyz as b on a.user_id = b.user_id and a.transaction_date = b.lst_date
-group by a.transaction_date, a.user_id
-) as b
