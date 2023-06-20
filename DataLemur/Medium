@@ -308,3 +308,35 @@ SELECT item_count
 from items_per_order
 where order_occurrences = (SELECT MAX(order_occurrences) FROM items_per_order)
 order by item_count
+
+==============================================================================================================================================
+
+A phone call is considered an international call when the person calling is in a different country than the person receiving the call.
+
+What percentage of phone calls are international? Round the result to 1 decimal.
+
+Assumption:
+
+The caller_id in phone_info table refers to both the caller and receiver.
+
+
+with call_country AS
+(
+SELECT  pic.country_id as caller_id,
+        pir.country_id as receiver_id
+from phone_calls pc
+join phone_info pic on pc.caller_id = pic.caller_id
+join phone_info pir on pc.receiver_id = pir.caller_id
+),
+count_call as 
+(
+SELECT count(*) total_calls,
+        sum(case when caller_id != receiver_id then 1 else 0 end) international_calls
+from call_country
+)
+SELECT ROUND((100.0 * international_calls / total_calls), 1) international_calls_pct
+from count_call
+  
+
+
+
